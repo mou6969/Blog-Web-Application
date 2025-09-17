@@ -1,0 +1,120 @@
+  <%- include('partials/navbar') %>
+
+<main class="content">
+  <!-- LEFT COLUMN -->
+  <div class="main-column">
+    <!-- Main article (newest post) -->
+    <% if (posts.length > 0) { const newest = posts[0]; %>
+      <section class="main-article" style="background-image: url('<%= newest.imageURL %>')">
+        <div class="article-overlay">
+          <h2>
+            <a href="/posts/<%= newest.id %>"><%= newest.title %></a>
+          </h2>
+          <p><%= newest.content.substring(0, 180) %>…</p>
+        </div>
+      </section>
+    <% } %>
+
+    <!-- Option 2 -->
+<% const spotlightPost = posts.find(p => p.id === 7); %>
+<section class="highlight">
+  <h3>Player Spotlight</h3>
+  
+  <a href="/posts/<%= spotlightPost.id %>">
+    <div class="spotlight-image">
+      <img src="<%= spotlightPost.imageURL %>" alt="<%= spotlightPost.title %>">
+      <div class="caption"><%= spotlightPost.title %></div>
+    </div>
+  </a>
+  
+  <p>In-depth look at today’s standout Barça player.</p>
+</section>
+
+
+
+<section class="fixture">
+  <div class="match-card">
+    <h3>Upcoming Match</h3>
+
+    <div class="teams">
+      <div class="team team-left">
+        <img src="/images/barcelona.png" alt="FC Barcelona">
+        <span>FC Barcelona</span>
+      </div>
+
+      <div class="versus">VS</div>
+
+      <div class="team team-right">
+        <img src="/images/real-madrid.png" alt="Real Madrid">
+        <span>Real Madrid</span>
+      </div>
+    </div>
+
+    <div class="match-info">
+      <p>Date: 28 Sept 2025</p>
+      <p>Time: 20:00 CET</p>
+      <p>Stadium: Spotify Camp Nou</p>
+    </div>
+  </div>
+</section>
+
+
+
+    <!-- Option 4 -->
+<!-- Option 4 -->
+<% const editorPost = posts.find(p => p.id === 8); %>
+<section class="editor-corner">
+  <h3>Editor’s Pick</h3>
+  <p>Our recommended article of the week.</p>
+  <% if (editorPost) { %>
+    <a href="/posts/<%= editorPost.id %>">
+      <div class="spotlight-image">
+        <img src="<%= editorPost.imageURL %>" alt="<%= editorPost.title %>">
+        <div class="caption"><%= editorPost.title %></div>
+      </div>
+    </a>
+    
+    <% if (editorPost.content) { 
+         // limit to 200 characters for preview
+         const preview = editorPost.content.length > 200 ? editorPost.content.substring(0, 200) + "…" : editorPost.content; 
+    %>
+      <p><%= preview %></p>
+      <a href="/posts/<%= editorPost.id %>" style="color: #FFD700; text-decoration: underline;">Read more</a>
+    <% } %>
+  <% } else { %>
+    <p>Editor’s pick is not available at the moment.</p>
+  <% } %>
+</section>
+</div>
+
+<%- include('partials/top-stories', { posts: posts }) %>
+
+
+</main>
+<script>
+  const teams = document.querySelectorAll('.team-left, .team-right');
+  const versus = document.querySelectorAll('.versus, .match-info');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (entry.target.classList.contains('team-left')) {
+          entry.target.classList.add('animate-left');
+        } else if (entry.target.classList.contains('team-right')) {
+          entry.target.classList.add('animate-right');
+        } else if (entry.target.classList.contains('versus') || entry.target.classList.contains('match-info')) {
+          entry.target.classList.add('animate-fade');
+        }
+        observer.unobserve(entry.target); // animate only once
+      }
+    });
+  }, {
+    threshold: 0.5 // triggers when 50% visible
+  });
+
+  teams.forEach(team => observer.observe(team));
+  versus.forEach(item => observer.observe(item));
+</script>
+<%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<aside class="top-stories">
+  <h3>Top Stories</h3>
+  <ul>
+    <% posts
+        .slice(1)
+        .filter(p => p.id !== 7 && p.id !== 8) // skip posts with IDs 7 or 8
+        .forEach(p => { %>
+      <li class="story" style="background-image: url('<%= p.imageURL %>')">
+        <a href="/posts/<%= p.id %>" style="display: block; width: 100%; height: 100%; color: inherit; text-decoration: none;">
+          <span class="story-title"><%= p.title %></span>
+        </a>
+      </li>
+    <% }) %>
+  </ul>
+</aside>
